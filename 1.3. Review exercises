@@ -1,0 +1,20 @@
+"""Review exercises:
+1. Create a string and print its length using the len() function
+2. Create two strings, concatenate them (add them next to each other) 
+and print the combination of the two strings
+3. Create two string variables, then print one of them after the other 
+(with a space added in between) using a comma in your print statement
+4. print the string "zing" by using subscripting and index numbers on the string
+"bazinga" to specify the correct range of characters"""
+
+string = 'sikiriki'
+print(len(string))
+s1 = 'siki'
+s2 = 'riki'
+s3 = s1+s2
+print(s3)
+s4 = 'abra'
+s5 = 'cadabra'
+print(s4,s5)
+s6 = 'bazinga'
+print(s6[2:-1])
