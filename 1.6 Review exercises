@@ -1,0 +1,22 @@
+'''Review exercises:
+1. Create a string object that stores an integer as its value, then convert that string into
+an actual integer object using int() ; test that your new object is really a number
+Fundamentals: Working with Strings
+37
+by multiplying it by another number and displaying the result
+2. Repeat the previous exercise, but use a floating-point number and float()
+3. Create a string object and an integer object, then display them side-by-side with a
+single print statement by using the str() function'''
+
+#1
+my_integer_string = "4"
+print(int(my_integer_string) * 9)
+
+#2
+my_float_string = "6.01"
+print(float(my_float_string) * 7)
+
+#3
+my_string = "blah"
+my_int = 23
+print(my_string + str(my_int))
