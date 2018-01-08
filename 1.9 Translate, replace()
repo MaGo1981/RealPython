@@ -1,0 +1,26 @@
+'''Assignment: Turn your user into a l33t h4x0r
+Write a script translate.py that asks the user for some input with the following prompt:
+Enter some text:
+You should then use the replace() method to convert the text entered by the user into
+"leetspeak" by making the following changes to lower-case letters:
+The letter: a becomes: 4
+The letter: b becomes: 8
+The letter: e becomes: 3
+The letter: l becomes: 1
+The letter: o becomes: 0
+The letter: s becomes: 5
+The letter: t becomes: 7
+Your program should then display the resulting output. A sample run of the program,
+with the user input in bold, is shown below:
+>>> Enter some text: I like to eat eggs and spam.
+I 1ik3 70 347 3gg5 4nd 5p4m.'''
+
+text = Input('Enter some text: ')
+text = text.replace("a", "4")
+text = text.replace("b", "8")
+text = text.replace("e", "3")
+text = text.replace("l", "1")
+text = text.replace("o", "0")
+text = text.replace("s", "5")
+text = text.replace("t", "7")
+print(text)
