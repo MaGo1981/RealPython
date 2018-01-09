@@ -1,3 +1,6 @@
+'''Write a script called exponent.py that receives two numbers from the user and displays
+the result of taking the first number to the power of the second number.'''
+
 base = input('Enter a base: ')
 exponent = input('Enter an exponent: ')
 result = float(base)**float(exponent)
