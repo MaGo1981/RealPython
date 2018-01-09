@@ -1,0 +1,24 @@
+'''
+1. Write a cube() function that takes a number and multiplies that number by itself
+twice over, returning the new value; test the function by displaying the result of
+calling your cube() function on a few different numbers
+2. Write a function multiply() that takes two numbers as inputs and multiplies them
+together, returning the result; test your function by saving the result of multiply(2,
+5) in a new variable and printing it
+'''
+#1
+def cube(num):
+    '''takes a number and multiplies that number by itself
+    twice over, returning the new value'''
+    return num*num*num
+print(cube(5), cube(6), cube(7))
+print(cube(1), cube(2), cube(3))
+
+#2
+def multiply(num1,num2):
+    ''' takes two numbers as inputs and multiplies them
+    together, returning the result'''
+    return num1*num2
+result = multiply(2,5)
+print(result)
+print(multiply(2,5), multiply(6,4), multiply(9,6))
