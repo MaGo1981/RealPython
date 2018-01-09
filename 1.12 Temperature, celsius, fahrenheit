@@ -1,0 +1,27 @@
+
+'''
+Write a script temperature.py that includes two functions. 
+One function takes a Celsius temperature as its input, converts that number into the equivalent Fahrenheit
+temperature and returns that value. 
+The second function takes a Fahrenheit temperature
+and returns the equivalent Celsius temperature. Test your functions by passing input
+values to them and printing the output results.'''
+
+#1
+def convertCelsiusIntoFahrenheit(celsius):
+    '''takes a Celsius temperature as its input, 
+    converts that number into the equivalent 
+    Fahrenheit temperature and returns that value'''
+    fahrenheit = celsius* 9/5 + 32
+    return fahrenheit
+celsius=37
+print(str(celsius) +' degrees C = '+ str(convertCelsiusIntoFahrenheit(celsius)) +' degrees F')
+ 
+#2
+def converFahrenheitIntoCelsius(fahrenheit):
+    '''takes a Fahrenheit temperature
+    and returns the equivalent Celsius temperature'''
+    celsius = (fahrenheit - 32) * 5/9
+    return celsius
+fahrenheit = 72
+print(str(fahrenheit) +' degrees F = '+ str(converFahrenheitIntoCelsius(fahrenheit)) +' degrees C')
