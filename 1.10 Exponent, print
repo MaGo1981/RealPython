@@ -1,0 +1,4 @@
+base = input('Enter a base: ')
+exponent = input('Enter an exponent: ')
+result = float(base)**float(exponent)
+print(str(base)+' to the power of '+str(exponent)+' = '+str(result)) 
