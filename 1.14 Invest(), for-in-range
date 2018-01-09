@@ -19,4 +19,5 @@ def invest(amount, rate, time):
         print('year ', year, ': $', float(balance))
         amount = balance
 invest(100, 0.05, 8)  
+print()
 invest(2000, 0.025, 5)
