@@ -1,0 +1,30 @@
+'''Review exercises:
+1. Write a script that repeatedly asks the user to input an integer, 
+displaying a message to "try again" by catching the ValueError that is 
+raised if the user did not enter an integer; once the user enters an 
+integer, the program should display the
+number back to the user and end without crashing'''
+
+#1
+text = input('Input an integer: ')
+while text != type(int):
+    try:
+        text = int(text)
+        print(text)
+        break
+    except ValueError:
+        text = input("Try again: ")
+        
+#2
+text = input('Input an integer: ')
+while text != type(int):
+    try:
+        text = int(text)
+        print(text)
+    except ValueError:
+        text = input("Try again: ")
+    else: # ako uspije try, skace na else
+        break
+    #finally: # u oba slucaja izvrsava
+        #print('izvrsava se u oba slucaja - try i except')
+        # npr. close file even if fail
