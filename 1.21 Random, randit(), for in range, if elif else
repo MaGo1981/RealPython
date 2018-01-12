@@ -1,0 +1,30 @@
+'''Review exercises:
+1. Write a script that uses the randint() function to simulate the toss of a die,
+returning a random number between 1 and 6.
+2. Write a script that simulates 10,000 throws of dice and displays the 
+average number resulting from these tosses.'''
+
+from random import randint
+heads = 0
+tails = 0
+one = 0
+two = 0
+three = 0
+four = 0
+five = 0
+six = 0
+for trial in range(1, 160):
+    if randint(0, 6) == 1:
+        one += 1
+    elif randint(0, 6) == 2:
+        two += 2
+    elif randint(0, 6) == 3:
+        three += 3
+    elif randint(0, 6) == 4:
+        four += 4
+    elif randint(0, 6) == 5:
+        five += 5
+    else:
+        six += 6
+average = (one + two + three + four + five + six)/trial
+print("average = ", average)
