@@ -1,0 +1,34 @@
+'''Assignment: Cats with hats
+You have 100 cats.
+One day you decide to arrange all your cats in a giant circle. Initially, none of your cats
+have any hats on. You walk around the circle 100 times, always starting at the same
+spot, with the first cat (cat # 1). Every time you stop at a cat, you either put a hat on it if it
+doesn't have one on, or you take its hat off if it has one on.
+1. The first round, you stop at every cat, placing a hat on each one.
+2. The second round, you only stop at every second cat (#2, #4, #6, #8, etc.).
+3. The third round, you only stop at every third cat (#3, #6, #9, #12, etc.).
+4. You continue this process until you've made 100 rounds around the cats (e.g., you
+only visit the 100th cat).
+Write a program that simply outputs which cats have hats at the end.
+NOTE: This is not an easy problem by any means. Honestly, the code is simple.
+This problem is often seen on job interviews as it tests your ability to reason your
+way through a difficult problem. Stay calm. Start with a diagram, and then write
+pseudo code. Find a pattern. Then code!'''
+
+
+def get_cats_with_hats(array_of_cats):
+    cats_with_hats_on = []
+    for num in range(1, 100 + 1):
+        for cat in range(1, 100 + 1):
+            if cat % num == 0:
+                if array_of_cats[cat] is True:
+                    array_of_cats[cat] = False
+                else:
+                    array_of_cats[cat] = True
+    for cat in range(1, 100 + 1):
+        if cats[cat] is True:
+            cats_with_hats_on.append(cat)
+    return cats_with_hats_on
+
+cats = [False] * (100 + 1) # stvaramo niz od 101 macke, sve s pocetnom vrijednoscu False
+print(get_cats_with_hats(cats))
