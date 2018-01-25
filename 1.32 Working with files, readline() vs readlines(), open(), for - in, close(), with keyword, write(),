@@ -29,9 +29,27 @@ while line != "":
     line = my_input_file.readline()
 my_input_file.close()
 
-# 2 
+# 2
+import io
+#with open("hello.txt", "r") as my_input_file:
 with io.StringIO('''This is the first line
 The second line is longer
-Hippopotamus''', "r") as my_input_file:
-for line in my_input_file.readlines():
-print(line),
+Hippopotamus''') as my_input_file:
+    for line in my_input_file.readlines():
+        print(line),
+# 3
+poem_in = open("poem.txt", "r")
+poem_out = open("output.txt", "w")
+for line in poem_in.readlines():
+    poem_out.write(line)
+poem_in.close()
+poem_out.close()
+
+# 3.1
+with open("poem.txt", "r") as poem_in, open("output.txt", "w") as poem_out:
+    for line in poem_in.readlines():
+        poem_out.write(line)
+        
+# 4
+with open("output.txt", "a") as poem_append:
+    poem_append.write("\nGood bye!")
