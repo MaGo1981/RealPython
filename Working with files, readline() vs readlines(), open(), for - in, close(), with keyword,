@@ -1,0 +1,37 @@
+'''Review exercises:
+1. Read in the raw text file poem.txt from the chapter 10 practice files and display each
+line by looping over them individually, then close the file; we'll discuss using file
+paths in the next section, but for now you can save your script in the same folder as
+the text file
+2. Repeat the previous exercise using the with keyword so that the file is closed
+automatically after you're done looping through the lines
+3. Write a text file output.txt that contains the same lines as poem.txt by opening both
+files at the same time (in different modes) and copying the original file over line-byline;
+do this using a loop and closing both files, then repeat this exercise using the
+with keyword
+4. Re-open output.txt and append an additional line of your choice to the end of the file
+on a new line'''
+
+# 1
+# open() is not supported in Online Python Tutor,
+# so use io.StringIO to simulate a file (in Python 3)
+import io
+
+#my_input_file = open("poem.txt", "r")
+
+# create a multi-line string and pass it into StringIO
+my_input_file = io.StringIO('''This is the first line
+The second line is longer
+Hippopotamus''')
+line = my_input_file.readline()
+while line != "":
+    print(line)
+    line = my_input_file.readline()
+my_input_file.close()
+
+# 2 
+with io.StringIO('''This is the first line
+The second line is longer
+Hippopotamus''', "r") as my_input_file:
+for line in my_input_file.readlines():
+print(line),
