@@ -1,0 +1,35 @@
+'''Review exercises:
+1. Display the full paths of all of the files and folders in the images folder 
+by using os.listdir()
+2. Display the full paths of any PNG files in the images folder by using glob.glob()
+3. Rename any PNG files in the images folder and its subfolders to be JPG files by
+using os.walk() ; in case you mess things up beyond repair, there is a copy of the
+images folder in the backup folder
+4. Make sure that your last script worked by using os.path.exists() to check that the
+JPG files now exist (by providing os.path.exists() with the full path to each of
+these files)'''
+
+import os
+
+#1
+
+myPath = "F:\Courses Online\PYTHON\RealPython\Part 1\Images"
+# get a list of all files and folders
+filesAndFolders = os.listdir(myPath)
+#print(filesAndFolders)
+
+#2
+import glob
+possibleFiles = os.path.join(myPath, "*.png")
+#print(glob.glob(possibleFiles))
+
+#3
+for current_folder, subfolders, file_names in os.walk(myPath):
+    for file_name in file_names:
+        print ('Converting "{}" to JPG...'.format(file_name))
+        full_file_name = os.path.join(myPath, file_name)
+        new_file_name = full_file_name[0:len(full_file_name)-4] +".jpg"
+        #os.rename(full_file_name, new_file_name)# ne radi za subfolder
+#4
+        pathExists = os.path.exists(full_file_name)
+        print(pathExists)
