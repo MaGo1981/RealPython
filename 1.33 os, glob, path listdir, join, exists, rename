@@ -24,12 +24,21 @@ possibleFiles = os.path.join(myPath, "*.png")
 #print(glob.glob(possibleFiles))
 
 #3
-for current_folder, subfolders, file_names in os.walk(myPath):
-    for file_name in file_names:
-        print ('Converting "{}" to JPG...'.format(file_name))
-        full_file_name = os.path.join(myPath, file_name)
-        new_file_name = full_file_name[0:len(full_file_name)-4] +".jpg"
-        #os.rename(full_file_name, new_file_name)# ne radi za subfolder
+for file_name in glob.glob(possibleFiles):
+
+    print ('Converting "{}" to JPG...'.format(file_name))
+    full_file_name = os.path.join(myPath, file_name)
+    new_file_name = full_file_name[0:len(full_file_name)-4] +".jpg"
+    os.rename(full_file_name, new_file_name)
 #4
-        pathExists = os.path.exists(full_file_name)
-        print(pathExists)
+    print(new_file_name, "file exists: ",  os.path.exists(new_file_name))
+    
+#3
+for fileName in glob.glob(possibleFilesInSubfolders):
+
+    print ('Converting "{}" to JPG...'.format(fileName))
+    full_file_name = os.path.join(myPath, file_name)
+    new_file_name = full_file_name[0:len(full_file_name)-4] +".jpg"
+    os.rename(full_file_name, new_file_name)
+#4
+    print(new_file_name, "file exists: ",  os.path.exists(new_file_name))
