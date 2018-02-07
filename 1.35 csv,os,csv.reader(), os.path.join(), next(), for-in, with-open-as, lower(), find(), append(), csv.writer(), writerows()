@@ -1,0 +1,53 @@
+'''
+Review exercises:
+1. Write a script that reads in the data from the CSV file pastimes.csv located in the
+chapter 9 practice files folder, skipping over the header row
+2. Display each row of data (except for the header row) as a list of strings
+3. Add code to your script to determine whether or not the second entry in each row
+(the "Favorite Pastime") converted to lower-case includes the word "fighting" using
+the string methods find() and lower()
+4. Use the list append() method to add a third column of data to each row that takes
+the value "Combat" if the word "fighting" is found and takes the value "Other" if
+neither word appears
+5. Write out a new CSV file categorized pastimes.csv to the Output folder with the
+updated data that includes a new header row with the fields "Name", "Favorite
+Pastime", and "Type of Pastime"
+'''
+
+#1
+import csv
+import os
+newLists = []
+my_path = "F:/Courses Online/PYTHON/RealPython/Part 1"
+with open(os.path.join(my_path, "pastimes.csv"), "r") as my_file:
+    my_file_reader = csv.reader(my_file)
+    next(my_file_reader) # brise prvi red
+#2    
+#    for row in my_file_reader: # for mora biti unutar with (inace se file zatvara)
+#        print(row)
+#3 
+with open(os.path.join(my_path, "pastimes.csv"), "r") as my_file:
+    my_file_reader = csv.reader(my_file) 
+    #next(my_file_reader) # brise prvi red
+    for row in my_file_reader: # for mora biti unutar with (inace se file zatvara)
+
+        lowerWord = row[1].lower()
+        
+#        print(lowerWord)
+        if lowerWord.find('fighting') != -1: # ako ne nadje, vraca -1
+            result = True
+#4
+            row.append("Combat")
+            newLists.append(row)
+#            print(newLists)
+        else:
+            row.append("Other")
+            newLists.append(row)
+    newLists[0]=["Name", "Favorite Pastime", "Type of pastime"]
+    print(newLists)
+
+
+#5        
+with open(os.path.join(my_path, "pastimes1.csv"), "w") as myNewFile:
+    my_file_writer = csv.writer(myNewFile)
+    my_file_writer.writerows(newLists) # stvara sve redove u jednoj liniji
