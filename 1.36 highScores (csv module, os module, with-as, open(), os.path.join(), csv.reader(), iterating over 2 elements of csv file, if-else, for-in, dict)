@@ -38,3 +38,6 @@ with open(os.path.join(my_path, "scores.csv"), "r") as my_file:
             scoresDict[name] = score # ime i vrijednost ulaze u listu
 for name in sorted(scoresDict):
     print(name, scoresDict[name])
+
+# sortirano po vrijednosti:    
+# print(sorted([(value,key) for (key,value) in scoresDict.items()]))
