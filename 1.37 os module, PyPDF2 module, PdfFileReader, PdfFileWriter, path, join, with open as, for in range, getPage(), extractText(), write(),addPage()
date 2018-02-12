@@ -1,0 +1,36 @@
+'''Review exercises:
+1. Write a script that opens the file named The Whistling Gypsy.pdf from the Chapter
+11 practice files, then displays the title, author, and total number of pages in the file
+2. Extract the full contents of The Whistling Gypsy.pdf into a .TXT file
+3. Save a new version of The Whistling Gypsy.pdf that does not include the cover
+page into the "Output" folder'''
+
+import os
+from PyPDF2 import PdfFileReader, PdfFileWriter
+
+path = "F:/Courses Online/PYTHON/RealPython/Part 1/PracticeFilesPDF"
+input_file_name = os.path.join(path, "The Whistling Gypsy.pdf")
+input_file = PdfFileReader(open(input_file_name, "rb"))
+
+# Display meta-data about file
+print("Title:", input_file.getDocumentInfo().title)
+print("Author:", input_file.getDocumentInfo().author)
+print("Number of pages:", input_file.getNumPages())
+
+# Specify and open output text file
+output_file_name = os.path.join(path, "Output/The Whistling Gypsy.txt")
+with open(output_file_name, "w") as output_file:
+    # Extract every page of text
+    for page_num in range(0, input_file.getNumPages()):
+        text = input_file.getPage(page_num).extractText()
+##        text = text.encode("utf-8")  # convert text to unicode
+        output_file.write('TEXT KAO STRING UMJESTO VARIJABLE text koju ne prihvaća \n')
+
+# Save file without cover page
+output_PDF = PdfFileWriter()
+for page_num in range(1, input_file.getNumPages()):
+    output_PDF.addPage(input_file.getPage(page_num))
+
+output_file_name = os.path.join(path, "Output/The Whistling Gypsy un-covered.pdf")
+with open(output_file_name, "wb") as output_file:
+    output_PDF.write(output_file)
