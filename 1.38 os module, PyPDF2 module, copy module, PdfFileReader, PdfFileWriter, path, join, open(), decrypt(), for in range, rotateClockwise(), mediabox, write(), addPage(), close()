@@ -1,0 +1,42 @@
+'''Review exercises:
+1. Write a script that opens the file named Walrus.pdf from the Chapter 11 practice
+files; you will need to decrypt the file using the password "IamtheWalrus"
+2. Rotate every page in this input file counter-clockwise by 90 degrees
+3. Split each page in half vertically, such that every column appears on its own
+separate page, and output the results as a new PDF file in the Output folder'''
+
+import os
+import copy
+from PyPDF2 import PdfFileReader, PdfFileWriter
+
+path = "F:/Courses Online/PYTHON/RealPython/Part 1/PracticeFilesPDF"
+
+input_file_name = os.path.join(path, "Walrus.pdf")
+
+input_file = PdfFileReader(open(input_file_name, "rb"))
+input_file.decrypt("IamtheWalrus")
+output_PDF = PdfFileWriter()
+
+for page_num in range(0, input_file.getNumPages()):
+    pageLeft = input_file.getPage(page_num)
+    # if page_num % 2 == 0:
+    pageLeft.rotateClockwise(-90)
+    # split
+    #page_left = input_file.getPage(page_num)
+    page_right = copy.copy(pageLeft)
+    upper_right = pageLeft.mediaBox.upperRight # get original page corner
+    # crop and add left-side page
+    pageLeft.mediaBox.upperRight = (upper_right[0]/2, upper_right[1])
+    output_PDF.addPage(pageLeft)
+    # crop and add right-side page
+    page_right.mediaBox.upperLeft = (upper_right[0]/2, upper_right[1])
+    output_PDF.addPage(page_right)
+
+
+output_file_name = os.path.join(path, "Output/updatedWarlus.pdf")
+output_file = open(output_file_name, "wb")
+
+
+
+output_PDF.write(output_file)
+output_file.close()
