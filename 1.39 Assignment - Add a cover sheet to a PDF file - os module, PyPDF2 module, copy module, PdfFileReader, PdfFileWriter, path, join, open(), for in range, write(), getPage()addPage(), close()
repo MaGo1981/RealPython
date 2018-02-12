@@ -1,0 +1,32 @@
+'''Assignment: Add a cover sheet to a PDF file
+Write a script cover_the_emperor.py that appends the chapter 11 practice file named
+The Emperor.pdf to the end of the chapter 11 practice file named Emperor cover
+sheet.pdf and outputs the full resulting PDF to the file The Covered Emperor.pdf in the
+chapter 11 practice files "Output" folder.'''
+
+import os
+from PyPDF2 import PdfFileReader, PdfFileWriter
+
+path = "F:/Courses Online/PYTHON/RealPython/Part 1/PracticeFilesPDF"
+
+input_file_name1 = os.path.join(path, "Emperor cover sheet.pdf")
+input_file1 = PdfFileReader(open(input_file_name1, "rb"))
+input_file_name2 = os.path.join(path, "The Emperor.pdf")
+input_file2 = PdfFileReader(open(input_file_name2, "rb"))
+output_PDF = PdfFileWriter()
+
+# Read in all pages from the cover sheet PDF file
+for page_num in range(0, input_file1.getNumPages()):
+    page = input_file1.getPage(page_num)
+    output_PDF.addPage(page)
+
+# Read in all pages from "The Emperor.pdf" into the same output file
+for page_num in range(0, input_file2.getNumPages()):
+    page = input_file2.getPage(page_num)
+    output_PDF.addPage(page)
+
+# Output the results into a new PDF
+output_file_name = os.path.join(path, "Output/The Covered Emperor.pdf")
+output_file = open(output_file_name, "wb")
+output_PDF.write(output_file)
+output_file.close()
