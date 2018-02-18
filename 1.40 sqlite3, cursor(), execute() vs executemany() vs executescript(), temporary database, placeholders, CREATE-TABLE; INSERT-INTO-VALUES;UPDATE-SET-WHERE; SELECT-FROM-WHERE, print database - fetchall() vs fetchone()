@@ -1,0 +1,36 @@
+'''Review exercises:
+1. Create a database table in RAM named Roster that includes the fields Name ,
+Species and IQ
+2. Populate your new table with the following values:
+Jean-Baptiste Zorg, Human, 122
+Korben Dallas, Meat Popsicle, 100
+Ak'not, Mangalore, -5
+3. Update the Species of Korben Dallas to be Human
+4. Display the names and IQs of everyone in the table who is classified as Human'''
+
+ 
+import sqlite3
+
+# Create a temporary database connection in RAM using with!
+with sqlite3.connect(':memory:') as connection:
+    c = connection.cursor() # cursor object let us execute commands on the SQL database and return the results
+
+    # Create a "Roster" table with Name, Species and IQ fields
+    c.execute("CREATE TABLE Roster(Name TEXT, Species TEXT, IQ INT)")
+
+    # Add some data into the database
+    roster_data = (
+        ("Jean-Baptiste Zorg", "Human", 122),
+        ("Korben Dallas", "Meat Popsicle", 100),
+        ("Ak'not", "Mangalore", -5)
+    )
+    c.executemany("INSERT INTO Roster VALUES(?, ?, ?)", roster_data) # insert data into db with placeholders
+
+    # Update the Species of Korben Dallas to "Human"
+    c.execute("UPDATE Roster SET Species=? WHERE Name=?",
+              ('Human', 'Korben Dallas'))
+
+    # Display the names and IQs of everyone classified as Human
+    c.execute("SELECT Name, IQ FROM Roster WHERE Species = 'Human'")
+    for row in c.fetchall():
+        print(row)
