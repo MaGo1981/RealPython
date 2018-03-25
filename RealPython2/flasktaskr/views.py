@@ -5,7 +5,9 @@ import sqlite3
 from functools import wraps
 from flask import Flask, flash, redirect, render_template, \
 request, session, url_for, g
-from forms import AddTaskForm
+from forms import AddTaskForm 
+# our file forms.py
+
 
 # config
 app = Flask(__name__)
@@ -41,11 +43,11 @@ def logout():
     session.pop('logged_in', None)
     flash('Goodbye!')
     return redirect(url_for('login'))
-
-@app.route('/', methods=['GET', 'POST'])
+    
 '''Notice how we had to specify a POST request. By default, routes are set
-up automatically to handle GET requests. If you need to add different HTTP
-methods, such as a POST, you must add the methods argument to the decorator.'''
+   up automatically to handle GET requests. If you need to add different HTTP
+   methods, such as a POST, you must add the methods argument to the decorator.'''
+@app.route('/', methods=['GET', 'POST'])
 def login():
     '''In the first function, login() , we mapped the URL / 
        to the function, which in turn sets
@@ -57,6 +59,8 @@ def login():
             error = 'Invalid Credentials. Please try again.'
             return render_template('login.html', error=error)
         else:
+            # Sessions are configured, adding a value of True to the logged_in key, which is
+            # removed (via the pop method) when the user logs out (session.pop('logged_in', None))
             session['logged_in'] = True
             flash('Welcome!')
             # url_for() function generates an endpoint for the provided method.
@@ -64,13 +68,13 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/tasks/')
-@login_required
 '''When a GET request is sent to access tasks.html to view the HTML, it first hits the
 @login_required decorator and the entire function, tasks() , is momentarily replaced (or
 wrapped) by the login_required() function. Then when the user is logged in, the
 tasks() function is invoked, allowing the user to access tasks.html. If the user is not
 logged in, they are redirected back to the login screen'''
+@app.route('/tasks/')
+@login_required
 def tasks():
     '''We queried the database for open and closed tasks and assigned them to 
     two variables, open_tasks and closed tasks . We then passed those variables
@@ -93,10 +97,11 @@ def tasks():
     ]
     g.db.close()
     # display some information to the user
+    # using class AddTaskForm created in forms.py (our file)
     return render_template('tasks.html', form=AddTaskForm(request.form), open_tasks=open_tasks, closed_tasks=closed_tasks)
     
 # Add new tasks
-@app.route('/add/', methods=['POST'])
+@app.route('/add/', methods=['POST']) 
 @login_required
 def new_task():
     g.db = connect_db()
@@ -141,6 +146,8 @@ def complete(task_id):
 @app.route('/delete/<int:task_id>/')
 @login_required
 def delete_entry(task_id):
+    ''' we have to convert the task_id variable to a string, since we are using string
+    concatenation to combine the SQL query with the task_id , which is an integer.'''
     g.db = connect_db()
     g.db.execute('delete from tasks where task_id='+str(task_id))
     g.db.commit()
@@ -148,4 +155,3 @@ def delete_entry(task_id):
     flash('The task was deleted.')
     # url_for() function generates an endpoint for the provided method.
     return redirect(url_for('tasks'))
-
