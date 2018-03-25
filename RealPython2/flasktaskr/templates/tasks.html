@@ -60,6 +60,12 @@
           <td width="100px">{{ task.due_date }}</td>
           <td width="50px">{{ task.priority }}</td>
           <td>
+            <!--we pulled the task_id from the database dynamically from each row 
+            in the database table as the for loop iterates. We then assigned 
+            the id to a variable, also named task_id , which is then passed 
+            back to either the delete_entry() function
+            @app.route('/delete/<int:task_id>/') - or the complete() function -
+            @app.route('/complete/<int:task_id>/')-->
             <a href="{{ url_for('delete_entry', task_id = task.task_id) }}">Delete</a>  -
             <a href="{{ url_for('complete', task_id = task.task_id) }}">Mark as Complete</a>
           </td>
