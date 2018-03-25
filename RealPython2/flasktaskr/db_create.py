@@ -8,6 +8,11 @@ with sqlite3.connect(DATABASE_PATH) as connection:
     # get a cursor object used to execute SQL commands
     c = connection.cursor()
     
+    # delete table if already exists (dodano mimo knjige)
+    c.execute('''
+    DROP TABLE IF EXISTS tasks
+    ''')
+    
     # create the table
     c.execute("""CREATE TABLE tasks(task_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL, due_date TEXT NOT NULL, priority INTEGER NOT NULL,
