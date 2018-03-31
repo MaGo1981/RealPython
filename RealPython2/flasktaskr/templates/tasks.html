@@ -8,6 +8,10 @@
   <table>
     <tr>
       <form action="{{ url_for('new_task') }}" method="post">
+        <!--since we are issuing a POST request, we need to add {{ form.csrf_token }} to
+        all forms in the templates. This applies the CSRF prevention setting to the form that we
+        enabled in the configuration-->
+        {{ form.csrf_token }}
         <td>
           <label>Task Name:</label>
           <input name="name" type="text">
