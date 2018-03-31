@@ -5,8 +5,8 @@
 # Flask-WTF works in tandem with WTForms, abstracting much of the functionality
 from flask_wtf import Form
 from wtforms import StringField, DateField, IntegerField, \
-SelectField
-from wtforms.validators import DataRequired
+SelectField, PasswordField
+from wtforms.validators import DataRequired, Length, EqualTo
 
 
 class AddTaskForm(Form):
@@ -37,3 +37,29 @@ submission if the submitted data does not conform to the specific validators.
 
 We need to use a method called validate_on_submit() , which returns True if the
 data passes validation, in the function. We'll look at this further down the road.'''
+
+class RegisterForm(Form):
+    name = StringField(
+        'Username',
+        validators=[DataRequired(), Length(min=6, max=25)]
+    )
+    email = StringField(
+        'Email',
+        validators=[DataRequired(), Length(min=6, max=40)]
+    )
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired(), Length(min=6, max=40)])
+    confirm = PasswordField(
+        'Repeat Password',
+        validators=[DataRequired(), EqualTo('password', message='Passwords must match')]
+    )
+class LoginForm(Form):
+    name = StringField(
+        'Username',
+        validators=[DataRequired()]
+    )
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired()]
+    )
