@@ -12,8 +12,8 @@ db.create_all()
 
 # insert data
 # We then populate the table with some data, via the Task object from models.py to specify the schema.
-db.session.add(Task("Finish this tutorial", date(2016, 9, 22), 10, 1))
-db.session.add(Task("Finish Real Python", date(2016, 10, 3), 10, 1))
+# db.session.add(Task("Finish this tutorial", date(2016, 9, 22), 10, 1))
+# db.session.add(Task("Finish Real Python", date(2016, 10, 3), 10, 1))
 
 
 # commit the changes
