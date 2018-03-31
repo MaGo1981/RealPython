@@ -1,23 +1,29 @@
 # project/views.py
 
+#################
+#### imports ####
+#################
+
+from forms import AddTaskForm, RegisterForm, LoginForm
+# our file forms.py
 from functools import wraps
 from flask import Flask, flash, redirect, render_template, \
-request, session, url_for, g
-from forms import AddTaskForm 
-# our file forms.py
+request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 
 
-# config
+################
+#### config ####
+################
 app = Flask(__name__)
 # pulls in app configuration by looking for UPPERCASE variables
 # from_object() method takes an object as a parameter and passes it to config
 # Flask looks for variables within the object that are defined using ALL CAPITAL LETTERS
 app.config.from_object('_config')
 db = SQLAlchemy(app)
-
-from models import Task
+from models import Task, User 
+# our file models.py
 
 # helper functions
     
@@ -126,5 +132,26 @@ def delete_entry(task_id):
     flash('The task was deleted. Why not add a new one?')
     # url_for() function generates an endpoint for the provided method.
     return redirect(url_for('tasks'))
-
-
+    
+@app.route('/register/', methods=['GET', 'POST'])
+def register():
+    '''The user information obtained from the register.html template (which we still need
+    to create) is stored inside the variable new_user . That data is then added to the
+    database, and after successful registration, the user is redirected to login.html with a
+    message thanking them for registering. validate_on_submit() returns either True or
+    False depending on whether the submitted data passes the form validators associated
+    with each field in the form.'''
+    error = None
+    form = RegisterForm(request.form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_user = User(
+            form.name.data,
+            form.email.data,
+            form.password.data,
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Thanks for registering. Please login.')
+            return redirect(url_for('login'))
+    return render_template('register.html', form=form, error=error)
