@@ -62,10 +62,17 @@ form that we enabled in the configuration.
 '''
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    '''In the first function, login() , we mapped the URL / 
-       to the function, which in turn sets
-       the route to login.html in the templates directory 
-       if correct username and password are entered'''
+    '''
+    In the first function, login() , we mapped the URL / 
+    to the function, which in turn sets
+    the route to login.html in the templates directory 
+    if correct username and password are entered
+    
+    When a user submits their user credentials via a POST request, the database
+    is queried for the submitted username and password. If the credentials are 
+    not found, an error populates; otherwise, the user is logged in and 
+    redirected to tasks.html.
+    '''
     if request.method == 'POST':
         if request.form['username'] != app.config['USERNAME'] \
             or request.form['password'] != app.config['PASSWORD']:
