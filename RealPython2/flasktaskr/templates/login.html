@@ -5,6 +5,7 @@
 <h3>Please login to access your task list.</h3>
 
 <form action="/" method="post">
+    {{ form.csrf_token }}
     <div class="input-group">
         <label for="name">Username:</label>
         <input type="text" id="username" name="username" value="{{ request.form.username }}">
