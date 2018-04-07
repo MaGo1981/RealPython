@@ -22,18 +22,23 @@ app = Flask(__name__)
 # Flask looks for variables within the object that are defined using ALL CAPITAL LETTERS
 app.config.from_object('_config')
 db = SQLAlchemy(app)
+
 from models import Task, User 
 # our file models.py
 
 # helper functions
     
 def login_required(test):
-    '''The login_required decorator, meanwhile, checks to make sure that a user is authorized
-       before allowing access to certain pages'''
+    '''
+    The login_required decorator, meanwhile, checks to make sure that a 
+    user is authorized before allowing access to certain pages
+    '''
     @wraps(test)    
     def wrap(*args, **kwargs):
-        '''when the session key, logged_in , is set to True , the user has
-           the rights to view the main.html page'''
+        '''
+        when the session key, logged_in , is set to True , the user has
+        the rights to view the main.html page
+        '''
         if 'logged_in' in session:
             return test(*args, **kwargs)
         else:
@@ -45,8 +50,10 @@ def login_required(test):
 # route handlers
 @app.route('/logout/')
 def logout():
-    '''The pop() function used here is defined within the session class. It is
-       not the pop() function native to python that is used on lists.'''
+    '''
+    The pop() function used here is defined within the session class. It is
+    not the pop() function native to python that is used on lists.
+    '''
     session.pop('logged_in', None)
     flash('Goodbye!')
     return redirect(url_for('login'))
@@ -55,7 +62,7 @@ def logout():
 Notice how we had to specify a POST request. By default, routes are set
 up automatically to handle GET requests. If you need to add different HTTP
 methods, such as a POST, you must add the methods argument to the decorator.
-   
+
 Since we are issuing a POST request, we need to add {{ form.csrf_token }} to
 all forms in the templates. This applies the CSRF prevention setting to the 
 form that we enabled in the configuration.
@@ -66,33 +73,37 @@ def login():
     In the first function, login() , we mapped the URL / 
     to the function, which in turn sets
     the route to login.html in the templates directory 
-    if correct username and password are entered
+    if correct username and password are entered.
     
     When a user submits their user credentials via a POST request, the database
     is queried for the submitted username and password. If the credentials are 
     not found, an error populates; otherwise, the user is logged in and 
     redirected to tasks.html.
     '''
+    error = None
+    form = LoginForm(request.form)
     if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME'] \
-            or request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid Credentials. Please try again.'
-            return render_template('login.html', error=error)
+        if form.validate_on_submit():
+            user = User.query.filter_by(name=request.form['name']).first()
+            if user is not None and user.password == request.form['password']:
+                session['logged_in'] = True
+                session['user_id'] = user.id
+                flash('Welcome!')
+                return redirect(url_for('tasks'))
+            else:
+                error = 'Invalid username or password.'
         else:
-            # Sessions are configured, adding a value of True to the logged_in key, which is
-            # removed (via the pop method) when the user logs out (session.pop('logged_in', None))
-            session['logged_in'] = True
-            flash('Welcome!')
-            # url_for() function generates an endpoint for the provided method.
-            return redirect(url_for('tasks'))
-    return render_template('login.html')
+            error = 'Both fields are required.'
+    return render_template('login.html', form=form, error=error)
 
 
-'''When a GET request is sent to access tasks.html to view the HTML, it first hits the
+'''
+When a GET request is sent to access tasks.html to view the HTML, it first hits the
 @login_required decorator and the entire function, tasks() , is momentarily replaced (or
 wrapped) by the login_required() function. Then when the user is logged in, the
 tasks() function is invoked, allowing the user to access tasks.html. If the user is not
-logged in, they are redirected back to the login screen'''
+logged in, they are redirected back to the login screen
+'''
 @app.route('/tasks/')
 @login_required
 def tasks():
@@ -148,12 +159,14 @@ def delete_entry(task_id):
     
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
-    '''The user information obtained from the register.html template (which we still need
+    '''
+    The user information obtained from the register.html template (which we still need
     to create) is stored inside the variable new_user . That data is then added to the
     database, and after successful registration, the user is redirected to login.html with a
     message thanking them for registering. validate_on_submit() returns either True or
     False depending on whether the submitted data passes the form validators associated
-    with each field in the form.'''
+    with each field in the form.
+    '''
     error = None
     form = RegisterForm(request.form)
     if request.method == 'POST':
