@@ -51,9 +51,15 @@ def logout():
     flash('Goodbye!')
     return redirect(url_for('login'))
     
-'''Notice how we had to specify a POST request. By default, routes are set
-   up automatically to handle GET requests. If you need to add different HTTP
-   methods, such as a POST, you must add the methods argument to the decorator.'''
+'''
+Notice how we had to specify a POST request. By default, routes are set
+up automatically to handle GET requests. If you need to add different HTTP
+methods, such as a POST, you must add the methods argument to the decorator.
+   
+Since we are issuing a POST request, we need to add {{ form.csrf_token }} to
+all forms in the templates. This applies the CSRF prevention setting to the 
+form that we enabled in the configuration.
+'''
 @app.route('/', methods=['GET', 'POST'])
 def login():
     '''In the first function, login() , we mapped the URL / 
