@@ -2,47 +2,31 @@
 {% block content %}
 
 <h1>Welcome to FlaskTaskr</h1>
+<br>
 <a href="{{ url_for('logout') }}">Logout</a>
 <div class="add-task">
   <h3>Add a new task:</h3>
-  <table>
-    <tr>
-      <form action="{{ url_for('new_task') }}" method="post">
-        <!--since we are issuing a POST request, we need to add {{ form.csrf_token }} to
-        all forms in the templates. This applies the CSRF prevention setting to the form that we
-        enabled in the configuration-->
-        {{ form.csrf_token }}
-        <td>
-          <label>Task Name:</label>
-          <input name="name" type="text">
-        </td>
-        <td>
-          <label>Due Date (mm/dd/yyyy):</label>
-          <input name="due_date" type="text" style="width:160px;">
-        </td>
-        <td>
-          <label>Priority:</label>
-          <select name="priority" width="100px">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-          </select>
-        </td>
-        <td>
-          &nbsp;
-          &nbsp;
-          <input class="button" type="submit" value="Save">
-        </td>
-      </form>
-    </tr>
-  </table>
+  <form action="{{ url_for('new_task') }}" method="post" class="inline-form">
+    <!--since we are issuing a POST request, we need to add {{ form.csrf_token }} to
+    all forms in the templates. This applies the CSRF prevention setting to the form that we
+    enabled in the configuration-->
+    {{ form.csrf_token }}
+    <div class="input-group">
+      {{ form.name.label }}
+      {{ form.name }}
+    </div>
+    <div class="input-group">
+      {{ form.due_date.label }}
+      {{ form.due_date }}
+    </div>
+    <div class="input-group">
+      {{ form.priority.label }}
+      {{ form.priority }}
+    </div>
+    <div class="input-group">
+      <button type="submit">Submit</button>
+    </div>
+  </form>
 </div>
 <div class="entries">
   <br>
@@ -52,17 +36,23 @@
     <table>
       <thead>
         <tr>
-          <th width="300px"><strong>Task Name</strong></th>
-          <th width="100px"><strong>Due Date</strong></th>
+          <th width="200px"><strong>Task Name</strong></th>
+          <th width="75px"><strong>Due Date</strong></th>
+          <th width="100px"><strong>Posted Date</strong></th>
           <th width="50px"><strong>Priority</strong></th>
+          <th width="90px"><strong>Posted By</strong></th>
           <th><strong>Actions</strong></th>
         </tr>
       </thead>
       {% for task in open_tasks %}
         <tr>
-          <td width="300px">{{ task.name }}</td>
-          <td width="100px">{{ task.due_date }}</td>
+          <td width="200px">{{ task.name }}</td>
+          <td width="75px">{{ task.due_date }}</td>
+          <td width="100px">{{ task.posted_date }}</td>
           <td width="50px">{{ task.priority }}</td>
+            <!--Go back to your model. Notice that since we used poster as the 
+            backref, we can use it like a regular query object.-->
+          <td width="90px">{{ task.poster.name }}</td>
           <td>
             <!--we pulled the task_id from the database dynamically from each row 
             in the database table as the for loop iterates. We then assigned 
@@ -77,29 +67,35 @@
       {% endfor %}
     </table>
   </div>
-  <br>
-  <br>
 </div>
+<br>
+<br>
 <div class="entries">
   <h2>Closed tasks:</h2>
   <div class="datagrid">
     <table>
       <thead>
-      <tr>
-        <th width="300px"><strong>Task Name</strong></th>
-        <th width="100px"><strong>Due Date</strong></th>
-        <th width="50px"><strong>Priority</strong></th>
-        <th><strong>Actions</strong></th>
+        <tr>
+          <th width="200px"><strong>Task Name</strong></th>
+          <th width="75px"><strong>Due Date</strong></th>
+          <th width="100px"><strong>Posted Date</strong></th>
+          <th width="50px"><strong>Priority</strong></th>
+          <th width="90px"><strong>Posted By</strong></th>
+          <th><strong>Actions</strong></th>
         </tr>
       </thead>
       {% for task in closed_tasks %}
         <tr>
-          <td width="300px">{{ task.name }}</td>
-          <td width="100px">{{ task.due_date }}</td>
+          <td width="200px">{{ task.name }}</td>
+          <td width="75px">{{ task.due_date }}</td>
+          <td width="100px">{{ task.posted_date }}</td>
           <td width="50px">{{ task.priority }}</td>
-        <td>
-          <a href="{{ url_for('delete_entry', task_id = task.task_id) }}">Delete</a>
-        </td>
+            <!--Go back to your model. Notice that since we used poster as the 
+            backref, we can use it like a regular query object.-->
+          <td width="90px">{{ task.poster.name }}</td>
+          <td>
+             <a href="{{ url_for('delete_entry', task_id = task.task_id) }}">Delete</a>
+          </td>
         </tr>
       {% endfor %}
     </table>
