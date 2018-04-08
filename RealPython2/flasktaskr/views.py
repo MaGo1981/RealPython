@@ -10,6 +10,7 @@ from functools import wraps
 from flask import Flask, flash, redirect, render_template, \
 request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 
 
 
@@ -55,6 +56,7 @@ def logout():
     not the pop() function native to python that is used on lists.
     '''
     session.pop('logged_in', None)
+    session.pop('user_id', None) # pg 162
     flash('Goodbye!')
     return redirect(url_for('login'))
     
@@ -123,11 +125,13 @@ def new_task():
     form = AddTaskForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
-            new_task = Task(
-            form.name.data,
-            form.due_date.data,
-            form.priority.data,
-            '1'
+            new_task = Task(          # pg 159
+                form.name.data,
+                form.due_date.data,
+                form.priority.data,
+                datetime.datetime.utcnow(),
+                '1',
+                session['user_id']
             )
             db.session.add(new_task)
             db.session.commit()
