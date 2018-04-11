@@ -6,27 +6,41 @@
 <a href="{{ url_for('logout') }}">Logout</a>
 <div class="add-task">
   <h3>Add a new task:</h3>
-  <form action="{{ url_for('new_task') }}" method="post" class="inline-form">
-    <!--since we are issuing a POST request, we need to add {{ form.csrf_token }} to
-    all forms in the templates. This applies the CSRF prevention setting to the form that we
-    enabled in the configuration-->
-    {{ form.csrf_token }}
-    <div class="input-group">
-      {{ form.name.label }}
-      {{ form.name }}
-    </div>
-    <div class="input-group">
-      {{ form.due_date.label }}
-      {{ form.due_date }}
-    </div>
-    <div class="input-group">
-      {{ form.priority.label }}
-      {{ form.priority }}
-    </div>
-    <div class="input-group">
-      <button type="submit">Submit</button>
-    </div>
-  </form>
+    <form action="{{ url_for('new_task') }}" method="post">
+      {{ form.csrf_token }}
+      <div class="form-group">
+        {{ form.name(placeholder="name") }}
+        {% if form.name.errors %}
+          <span class="error">
+            {% for error in form.name.errors %}
+              {{ error }}
+            {% endfor %}
+          </span>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.due_date(placeholder="due date") }}
+        {% if form.due_date.errors %}
+          <span class="error">
+            {% for error in form.due_date.errors %}
+              {{ error }}
+            {% endfor %}
+          </span>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.priority.label }}
+        {{ form.priority }}
+        {% if form.priority.errors %}
+          <span class="error">
+            {% for error in form.priority.errors %}
+              {{ error }}
+            {% endfor %}
+          </span>
+        {% endif %}
+      </div>
+      <div class="form-group"><input class="btn btn-default" type="submit" value="Submit"></div>
+    </form>
 </div>
 <div class="entries">
   <br>
@@ -50,16 +64,8 @@
           <td width="75px">{{ task.due_date }}</td>
           <td width="100px">{{ task.posted_date }}</td>
           <td width="50px">{{ task.priority }}</td>
-            <!--Go back to your model. Notice that since we used poster as the 
-            backref, we can use it like a regular query object.-->
           <td width="90px">{{ task.poster.name }}</td>
           <td>
-            <!--we pulled the task_id from the database dynamically from each row 
-            in the database table as the for loop iterates. We then assigned 
-            the id to a variable, also named task_id , which is then passed 
-            back to either the delete_entry() function
-            @app.route('/delete/<int:task_id>/') - or the complete() function -
-            @app.route('/complete/<int:task_id>/')-->
             <a href="{{ url_for('delete_entry', task_id = task.task_id) }}">Delete</a>  -
             <a href="{{ url_for('complete', task_id = task.task_id) }}">Mark as Complete</a>
           </td>
@@ -90,8 +96,6 @@
           <td width="75px">{{ task.due_date }}</td>
           <td width="100px">{{ task.posted_date }}</td>
           <td width="50px">{{ task.priority }}</td>
-            <!--Go back to your model. Notice that since we used poster as the 
-            backref, we can use it like a regular query object.-->
           <td width="90px">{{ task.poster.name }}</td>
           <td>
              <a href="{{ url_for('delete_entry', task_id = task.task_id) }}">Delete</a>
