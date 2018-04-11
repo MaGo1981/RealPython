@@ -11,6 +11,7 @@ from flask import Flask, flash, redirect, render_template, \
 request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+from sqlalchemy.exc import IntegrityError
 
 
 
@@ -48,8 +49,25 @@ def login_required(test):
             return redirect(url_for('login'))
     return wrap
 
+# display the error messages to the end user
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text, error), 'error')
+            
+def open_tasks():
+    return db.session.query(Task).filter_by(
+        status='1').order_by(Task.due_date.asc())
+
+
+def closed_tasks():
+    return db.session.query(Task).filter_by(
+        status='0').order_by(Task.due_date.asc())
+    
 # route handlers
 @app.route('/logout/')
+@login_required
 def logout():
     '''
     The pop() function used here is defined within the session class. It is
@@ -57,6 +75,7 @@ def logout():
     '''
     session.pop('logged_in', None)
     session.pop('user_id', None) # pg 162
+    session.pop('role', None) # pg 214
     flash('Goodbye!')
     return redirect(url_for('login'))
     
@@ -90,6 +109,8 @@ def login():
             if user is not None and user.password == request.form['password']:
                 session['logged_in'] = True
                 session['user_id'] = user.id
+                session['role'] = user.role # we're simply adding the user's role to the session 
+                                            # cookie on the login, then removing it on logout.
                 flash('Welcome!')
                 return redirect(url_for('tasks'))
             else:
@@ -109,23 +130,24 @@ logged in, they are redirected back to the login screen
 @app.route('/tasks/')
 @login_required
 def tasks():
-    open_tasks = db.session.query(Task) \
-    .filter_by(status='1').order_by(Task.due_date.asc())
-    closed_tasks = db.session.query(Task) \
-    .filter_by(status='0').order_by(Task.due_date.asc())
     # display some information to the user
     # using class AddTaskForm created in forms.py (our file)
-    return render_template('tasks.html',form=AddTaskForm(request.form), open_tasks=open_tasks, closed_tasks=closed_tasks)
-
+    return render_template(
+        'tasks.html',
+        form=AddTaskForm(request.form),
+        open_tasks=open_tasks(),
+        closed_tasks=closed_tasks()
+    )
     
 # Add new tasks
 @app.route('/add/', methods=['POST']) 
 @login_required
 def new_task():
+    error = None
     form = AddTaskForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
-            new_task = Task(          # pg 159
+            new_task = Task(
                 form.name.data,
                 form.due_date.data,
                 form.priority.data,
@@ -136,30 +158,57 @@ def new_task():
             db.session.add(new_task)
             db.session.commit()
             flash('New entry was successfully posted. Thanks.')
-    return redirect(url_for('tasks'))
-        
+            return redirect(url_for('tasks'))
+    return render_template(
+        'tasks.html',
+        form=form,
+        error=error,
+        open_tasks=open_tasks(),
+        closed_tasks=closed_tasks()
+    )
+    
     
 # Mark tasks as complete
 @app.route('/complete/<int:task_id>/')
 @login_required
 def complete(task_id):
+    '''
+    We're querying the database for the row associated with the task_id , as we did
+    before. However, instead of just updating the status to 0 , we're checking to make sure
+    that the user_id associated with that specific task is the same as the user_id of the
+    user in session.
+    Now the if user_id in session matches the user_id that posted the task or if the user's
+    role is 'admin', then that user has permission to update or delete the task.
+    '''
     new_id = task_id
-    db.session.query(Task).filter_by(task_id=new_id).update({"status": "0"})
-    db.session.commit()
-    flash('The task is complete. Nice.')
+    task = db.session.query(Task).filter_by(task_id=new_id)
+    if session['user_id'] == task.first().user_id or session['role'] == "admin": # pg 214
+        task.update({"status": "0"})
+        db.session.commit()
+        flash('The task is complete. Nice.')
+        return redirect(url_for('tasks'))
+    else:
+        flash('You can only update tasks that belong to you.')
         # url_for() function generates an endpoint for the provided method.
-    return redirect(url_for('tasks'))
+        return redirect(url_for('tasks'))
+
       
 # Delete Tasks
 @app.route('/delete/<int:task_id>/')
 @login_required
 def delete_entry(task_id):
     new_id = task_id
-    db.session.query(Task).filter_by(task_id=new_id).delete()
-    db.session.commit()
-    flash('The task was deleted. Why not add a new one?')
-    # url_for() function generates an endpoint for the provided method.
-    return redirect(url_for('tasks'))
+    task = db.session.query(Task).filter_by(task_id=new_id)
+    if session['user_id'] == task.first().user_id or session['role'] == "admin":
+        task.delete()
+        db.session.commit()
+        flash('The task was deleted. Why not add a new one?')
+        return redirect(url_for('tasks'))
+    else:
+        flash('You can only delete tasks that belong to you.')
+        return redirect(url_for('tasks'))
+        # url_for() function generates an endpoint for the provided method.
+
     
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -180,8 +229,18 @@ def register():
             form.email.data,
             form.password.data,
             )
-            db.session.add(new_user)
-            db.session.commit()
-            flash('Thanks for registering. Please login.')
-            return redirect(url_for('login'))
+            '''
+            The code within the try block attempts to execute. If it fails due to the
+            exception specified in the except block, the code execution stops and the code within
+            the except block is ran. If the error does not occur then the program fully executes and
+            the except block is skipped altogether.
+            '''
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                flash('Thanks for registering. Please login.')
+                return redirect(url_for('login'))
+            except IntegrityError:
+                error = 'That username and/or email already exist.'
+                return render_template('register.html', form=form, error=error)
     return render_template('register.html', form=form, error=error)

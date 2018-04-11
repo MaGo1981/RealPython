@@ -47,6 +47,7 @@ class User(db.Model):
     # new field associated with the relationship() function is not an actual field in the database
     # it simply references the objects associated with the "many" side
     tasks = db.relationship('Task', backref='poster')
+    role = db.Column(db.String, default='user')
     '''
     Go back to your tasks.html. Notice that since we used poster as the 
     backref, we can use it like a regular query object.
@@ -56,6 +57,7 @@ class User(db.Model):
         self.name = name
         self.email = email
         self.password = password
+        self.role = role
     def __repr__(self):
         return '<User {0}>'.format(self.name)   
         
