@@ -12,6 +12,8 @@ SECRET_KEY = 'myprecious' #  SECRET_KEY config setting is used in conjunction wi
 #  setting in order to create a cryptographic token that is used to validate a form. It's
 #  also used for the same reason in conjunction with sessions
 
+DEBUG = True # pg 248
+
 # define the full path for the database
 DATABASE_PATH = os.path.join(basedir, DATABASE)
 
