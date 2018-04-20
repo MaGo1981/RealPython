@@ -6,13 +6,17 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 # pulls in app configuration by looking for UPPERCASE variables
 # from_object() method takes an object as a parameter and passes it to config
 # Flask looks for variables within the object that are defined using ALL CAPITAL LETTERS
 app.config.from_pyfile('_config.py')
+# pass the Flask app object into class wrapper
+bcrypt = Bcrypt(app) 
 db = SQLAlchemy(app)
+
 
 from project.users.views import users_blueprint
 from project.tasks.views import tasks_blueprint
