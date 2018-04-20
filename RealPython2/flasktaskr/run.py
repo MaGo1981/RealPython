@@ -19,4 +19,4 @@ To start, this application has the following features:
 
 # from project means from __init__.py file in project folder
 from project import app
-app.run(debug=True)
+app.run # pg 248
