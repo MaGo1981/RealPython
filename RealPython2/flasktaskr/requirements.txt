@@ -7,7 +7,7 @@ Jinja2==2.7.3
 MarkupSafe==0.23
 SQLAlchemy==0.9.9
 WTForms==2.0.2
-Werkzeug==0.10.1
+Werkzeug==0.15.3
 coverage==3.7.1
 ecdsa==0.13
 gunicorn==19.3.0
