@@ -5,7 +5,7 @@ cycler==0.10.0
 easygui==0.98.1
 idna==2.7
 kiwisolver==1.0.1
-lxml==4.2.3
+lxml==4.6.5
 matplotlib==2.2.2
 MechanicalSoup==0.10.0
 numpy==1.14.5
