@@ -15,7 +15,7 @@ pyparsing==2.2.0
 PyPDF2==1.26.0
 python-dateutil==2.7.3
 pytz==2018.5
-reportlab==3.4.0
+reportlab==3.5.55
 requests==2.19.1
 scipy==1.1.0
 six==1.11.0
